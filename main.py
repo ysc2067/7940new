@@ -90,7 +90,7 @@ def chat_handler(update, context):
     user_message = update.message.text
     try:
         response = requests.post(
-            url="https://genai.hkbu.edu.hk/v1/chat/completions",
+            url="https://genai.hkbu.edu.hk/general/rest",
             headers={
                 "Authorization": f"Bearer {OPENAI_API_KEY}",
                 "Content-Type": "application/json"
