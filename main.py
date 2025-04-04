@@ -84,20 +84,34 @@ def events(update, context):
     update.message.reply_text(reply_text)
 
 # Handler for non-command messages: Forward the text to ChatGPT API and return the answer
+import requests
+
 def chat_handler(update, context):
     user_message = update.message.text
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  # Use "gpt-4" if available and desired
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": user_message}
-            ]
+        response = requests.post(
+            url="https://genai.hkbu.edu.hk/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {OPENAI_API_KEY}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "model": "gpt-4-o",
+                "messages": [
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": user_message}
+                ]
+            }
         )
-        reply = response.choices[0].message['content'].strip()
-        update.message.reply_text(reply)
+
+        if response.status_code == 200:
+            reply = response.json()['choices'][0]['message']['content'].strip()
+            update.message.reply_text(reply)
+        else:
+            logger.error("GenAI API error: %s", response.text)
+            update.message.reply_text("Sorry, I couldn't get a valid response from the GPT API.")
     except Exception as e:
-        logger.error("Error calling OpenAI API: %s", e)
+        logger.error(" HKBU GPT API error: %s", e)
         update.message.reply_text("Sorry, I encountered an error processing your message.")
 
 def main():
