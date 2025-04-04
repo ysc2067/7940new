@@ -6,14 +6,12 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
 load_dotenv()
 
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 FIREBASE_CREDENTIALS_PATH = os.environ.get("FIREBASE_CREDENTIALS_PATH", "firebase_credentials.json")
 
-# Set up logging
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
